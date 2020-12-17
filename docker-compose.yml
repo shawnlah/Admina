@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "5000:5000"
+    env_file: ./backend/.env
+    networks:
+      - admina-network
+    command: ["yarn", "dev"]
+  db:
+    image: mongo:latest
+    volumes:
+      - data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - admina-network
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/:/usr/src/web
+      - /usr/src/web/node_modules
+      - /usr/src/web/.next
+    env_file: ./frontend/.env
+    ports:
+      - "3000:3000"
+    networks:
+      - admina-network
+    command: ["yarn", "dev"]
+
+networks:
+  admina-network:
+    driver: bridge
+
+volumes:
+  data:

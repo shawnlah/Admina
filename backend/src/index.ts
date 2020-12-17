@@ -7,8 +7,7 @@ const port = 5000;
 
 // Application routing
 app.use('/', (req: Request, res: Response, next: NextFunction ) => {
-  console.log('hi')
-  res.status(200).send({data: 'Hello from shawn from the future'});
+  res.status(200).send({data: 'all is ok'});
 });
 
 // Start server
