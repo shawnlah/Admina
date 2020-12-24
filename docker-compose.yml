@@ -12,7 +12,7 @@ services:
       - "5000:5000"
     env_file: ./backend/.env
     networks:
-      - admina-network
+      - eskolah-network
     command: ["yarn", "dev"]
   db:
     image: mongo:latest
@@ -21,7 +21,10 @@ services:
     ports:
       - "27017:27017"
     networks:
-      - admina-network
+      - eskolah-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: xo6-vv-a1l
   web:
     build:
       context: ./frontend
@@ -34,11 +37,14 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - admina-network
+      - eskolah-network
     command: ["yarn", "dev"]
+    environment:
+      - MONGO_URI=mongodb://admin:xo6-vv-a1l:27017
+      - MONGO_DB=eskolah_db
 
 networks:
-  admina-network:
+  eskolah-network:
     driver: bridge
 
 volumes:

@@ -9,15 +9,15 @@
     "moduleResolution": "node",     
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "baseUrl": "./src",
+    "rootDir": ".",
+    "baseUrl": "./backend",
     "paths": {
       "*": [
         "node_modules/*",
-        "src/types/*"            
+        "./types/*"            
       ]
     }  
   },
-  "include": [ "src/**/*" ],
+  "include": [ "./**/*", "index.ts" ],
   "exclude": ["node_modules"]
 }

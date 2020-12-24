@@ -1,10 +1,10 @@
 {
   "name": "node-server",
   "version": "0.0.1",
-  "main": "src/index.js",
+  "main": "./index.js",
   "scripts": {
     "tsc": "tsc",
-    "dev": "ts-node-dev --ignore-watch node_modules ./src/index.ts",
+    "dev": "ts-node-dev --ignore-watch node_modules ./index.ts",
     "prod": "tsc && node ./dist/index.js",
     "start": "node index.js"
   },
