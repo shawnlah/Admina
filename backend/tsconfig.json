@@ -1,23 +1,27 @@
-{    
-  "compilerOptions": {        
+{
+  "compilerOptions": {
     "module": "commonjs",
-    "esModuleInterop": true,        
+    "esModuleInterop": true,
     "target": "es6",
     "noImplicitAny": false,
     "strict": true,
     "strictNullChecks": true,
-    "moduleResolution": "node",     
+    "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": ".",
     "baseUrl": "./backend",
     "paths": {
       "*": [
         "node_modules/*",
-        "./types/*"            
+        "./types/*"
       ]
-    }  
+    }
   },
-  "include": [ "./**/*", "index.ts" ],
-  "exclude": ["node_modules"]
+  "include": [
+    "./**/*",
+    "index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
