@@ -8,8 +8,18 @@ const InventorySchema: Schema = new Schema(
     },
     history: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'InventoryHistory'
+        borrowedBy: {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+          required: true
+        },
+        borrowedOn: {
+          type: Date,
+          required: true
+        },
+        returnedOn: {
+          type: Date
+        }
       }
     ],
     inventoryType: {

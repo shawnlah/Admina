@@ -1,6 +1,7 @@
 import { Document } from 'mongoose'
 
 export interface UserModelInterface extends Document {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -10,6 +11,8 @@ export interface UserModelInterface extends Document {
     type: string;
     enum: UserRoleEnums
   };
+  updatedAt: string;
+  createdAt: string;
 }
 
 export enum UserRoleEnums {
