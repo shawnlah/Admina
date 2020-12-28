@@ -1,6 +1,8 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application } from 'express';
 import dotenv from 'dotenv'
 import { connect } from 'mongoose';
+import authRoutes from './routes/authentication'
+import logger from './logger';
 
 // Set up env
 dotenv.config()
@@ -10,19 +12,20 @@ const mongoURI = process.env.MONGO_URI
 // Boot express
 const app: Application = express();
 
-// Application routing
-app.use('/', (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).send({ data: 'all is ok' });
-});
+// Routes
+app.use('/auth', authRoutes)
 
 // Start server
-app.listen(port, () => console.log(`Server is listening on port ${port}!`));
+app.listen(port, () => logger.debug(`Server is listening on port ${port}!`));
 
 // Connect to db
 if (mongoURI) {
-  connect(mongoURI)
-    .then(resp => console.log("Successfully connected to mongo db"))
-    .catch(err => console.log(`Failed to connect to mongo db with uri ${mongoURI} and error: ${err}`))
+  connect(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+    .then(resp => logger.debug("Successfully connected to mongo db"))
+    .catch(err => logger.debug(`Failed to connect to mongo db with uri ${mongoURI} and error: ${err}`))
 } else {
-  console.log("Mongo URI EMPTY")
+  logger.debug("Mongo URI EMPTY")
 }

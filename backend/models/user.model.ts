@@ -11,6 +11,10 @@ const UserSchema: Schema = new Schema(
       type: String,
       required: true
     },
+    identification: {
+      type: String,
+      required: true
+    },
     email: {
       type: String,
       unique: true
