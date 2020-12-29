@@ -23,3 +23,9 @@ export enum UserRoleEnums {
   STUDENT = "STUDENT",
   PARENT = "PARENT"
 }
+
+export enum IdentificationTypeEnum {
+  NEW_IC = "NEW_IC",
+  OLD_IC = "OLD_IC",
+  PASSPORT = "PASSPORT"
+}

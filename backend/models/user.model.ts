@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { UserModelInterface, UserRoleEnums } from '../interfaces/user'
+import { IdentificationTypeEnum, UserModelInterface, UserRoleEnums } from '../interfaces/user'
 
 const UserSchema: Schema = new Schema(
   {
@@ -14,6 +14,11 @@ const UserSchema: Schema = new Schema(
     identification: {
       type: String,
       required: true
+    },
+    identificationType: {
+      type: String,
+      required: true,
+      enum: Object.values(IdentificationTypeEnum)
     },
     email: {
       type: String,
