@@ -5,10 +5,9 @@ const router = Router()
 const auth = new AuthControllers()
 
 // Login
-router.route('/').get(auth.getLogin)
-router.route('/').post(auth.postLogin)
+router.route('/').post(auth.login)
 
 // Logout
-router.route('/logout').get(auth.getLogout)
+router.route('/logout').delete(auth.logout)
 
 export default router 
