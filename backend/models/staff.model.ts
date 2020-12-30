@@ -9,7 +9,15 @@ const StaffSchema = new Schema(
         ref: 'Leave'
       }
     ],
-    noticePeriod: Number,
+    noticePeriod: {
+      type: Number,
+      required: true,
+      default: 14
+    },
+    position: {
+      type: String,
+      required: true
+    },
     semesterSchedule: [
       {
         type: Schema.Types.ObjectId,

@@ -8,5 +8,6 @@ export interface StaffModelInterface extends Document {
   leaveHistory: LeaveModelInterface[];
   noticePeriod: number;
   semesterSchedule: ScheduleModelInterface[];
+  position: string;
   user: UserModelInterface;
 }

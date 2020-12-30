@@ -8,11 +8,6 @@ const TeacherSchema: Schema = new Schema(
       ref: 'Staff',
       required: true
     },
-    noticePeriod: {
-      type: Number,
-      required: true,
-      default: 14
-    },
     classes: [
       {
         type: Schema.Types.ObjectId,

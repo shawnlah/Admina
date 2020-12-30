@@ -12,10 +12,11 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import NavBar from '../../components/navbar'
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import { IdentificationTypeEnum, IdentificationTypes } from "../../interfaces/user";
+import { KeyboardDatePicker } from '@material-ui/pickers';
+import NavBar from '../../components/navbar'
+import { IdentificationTypeEnum, IdentificationTypes, UserRoleEnums, UserRoles } from "../../interfaces/user";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -68,6 +69,18 @@ export default function CreateUser() {
     return idTypesComponent
   }
 
+  const RoleSelectComponent = () => {
+    const rolesComponent = []
+    for (const role of [UserRoleEnums.ADMIN, UserRoleEnums.TEACHER]) {
+      rolesComponent.push(<MenuItem key={role} value={role}>{UserRoles.get(role)}</MenuItem>)
+    }
+    return rolesComponent
+  }
+
+  const handleDateChange = (date: Date | null) => {
+    // TODO
+  }
+
   const CreateUserForm = () => {
     return (
       <Grid container component="main" className={classes.root}>
@@ -90,7 +103,7 @@ export default function CreateUser() {
               </Typography>
               <form className={classes.form} noValidate>
                 <Grid container spacing={2}>
-                  <Grid item xs>
+                  <Grid item sm>
                     <TextField
                       margin="normal"
                       required
@@ -102,7 +115,7 @@ export default function CreateUser() {
                       autoFocus
                     />
                   </Grid>
-                  <Grid item xs>
+                  <Grid item sm>
                     <TextField
                       margin="normal"
                       required
@@ -115,7 +128,60 @@ export default function CreateUser() {
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid xs className={classes.idTypeSelect}>
+                  <Grid item sm>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Email"
+                      id="email"
+                      name="email"
+                      autoComplete="email"
+                      autoFocus
+                    />
+                  </Grid>
+                  <Grid item sm>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Phone Number"
+                      name="phone-number"
+                      id="phone-number"
+                      autoComplete="phone-number"
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item sm>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      variant="inline"
+                      format="dd/MM/yyyy"
+                      margin="normal"
+                      id="date-picker-inline"
+                      label="Date Of Birth"
+                      value={null}
+                      onChange={handleDateChange}
+                    // KeyboardButtonProps={{
+                    //   'aria-label': 'change date',
+                    // }}
+                    />
+                  </Grid>
+                  <Grid item sm>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Phone Number"
+                      name="phone-number"
+                      id="phone-number"
+                      autoComplete="phone-number"
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid sm className={classes.idTypeSelect}>
                     <Select
                       required
                       fullWidth
@@ -127,7 +193,7 @@ export default function CreateUser() {
                       {IdSelectComponent()}
                     </Select>
                   </Grid>
-                  <Grid item xs>
+                  <Grid item sm>
                     <TextField
                       margin="normal"
                       required
@@ -136,6 +202,31 @@ export default function CreateUser() {
                       name="identification"
                       id="identification"
                       autoComplete="identification"
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid sm className={classes.idTypeSelect}>
+                    <Select
+                      required
+                      fullWidth
+                      label="Role"
+                      id="role"
+                      name="role"
+                      value={UserRoleEnums.TEACHER}
+                    >
+                      {RoleSelectComponent()}
+                    </Select>
+                  </Grid>
+                  <Grid item sm>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      label="Title of Position"
+                      name="position"
+                      id="position"
+                      autoComplete="position"
                     />
                   </Grid>
                 </Grid>
