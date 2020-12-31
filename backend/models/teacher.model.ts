@@ -15,9 +15,6 @@ const TeacherSchema: Schema = new Schema(
         required: true
       }
     ],
-    additionalInfo: {
-      type: String
-    },
     inventoriesBorrowed: [
       {
         type: Schema.Types.ObjectId,

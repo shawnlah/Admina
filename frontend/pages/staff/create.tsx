@@ -1,20 +1,9 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
+import React, { FormEvent, useState } from "react";
+import { Avatar, Button, CssBaseline, TextField, TextareaAutosize, Paper, Grid, Typography, makeStyles, Select, MenuItem } from '@material-ui/core'
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns'
+import logger from 'loglevel'
 import NavBar from '../../components/navbar'
 import { IdentificationTypeEnum, IdentificationTypes, UserRoleEnums, UserRoles } from "../../interfaces/user";
 
@@ -58,8 +47,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+interface CreateStaffForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: Date;
+  identificationType: IdentificationTypeEnum;
+  identification: string;
+  role: UserRoleEnums.ADMIN | UserRoleEnums.TEACHER;
+  position: string;
+  additionalInfo: string;
+}
+
 export default function CreateUser() {
   const classes = useStyles();
+
+  const [state, setState] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    dateOfBirth: null,
+    identificationType: IdentificationTypeEnum.NEW_IC,
+    identification: '',
+    role: UserRoleEnums.TEACHER,
+    position: '',
+    additionalInfo: ''
+  } as CreateStaffForm)
 
   const IdSelectComponent = () => {
     const idTypesComponent = []
@@ -77,8 +92,9 @@ export default function CreateUser() {
     return rolesComponent
   }
 
-  const handleDateChange = (date: Date | null) => {
-    // TODO
+  const handleSubmit = (e: FormEvent) => {
+    logger.info("Form submission triggered", state)
+    e.preventDefault()
   }
 
   const CreateUserForm = () => {
@@ -101,7 +117,7 @@ export default function CreateUser() {
               <Typography component="h1" variant="h5">
                 Create New Staff
               </Typography>
-              <form className={classes.form} noValidate>
+              <form className={classes.form} onSubmit={handleSubmit} noValidate>
                 <Grid container spacing={2}>
                   <Grid item sm>
                     <TextField
@@ -113,6 +129,9 @@ export default function CreateUser() {
                       name="first-name"
                       autoComplete="first-name"
                       autoFocus
+                      autoCapitalize='on'
+                      value={state.firstName}
+                      onChange={(e) => setState({ ...state, firstName: e.target.value })}
                     />
                   </Grid>
                   <Grid item sm>
@@ -124,6 +143,10 @@ export default function CreateUser() {
                       name="last-name"
                       id="last-name"
                       autoComplete="last-name"
+                      autoFocus
+                      autoCapitalize='on'
+                      value={state.lastName}
+                      onChange={(e) => setState({ ...state, lastName: e.target.value })}
                     />
                   </Grid>
                 </Grid>
@@ -138,6 +161,8 @@ export default function CreateUser() {
                       name="email"
                       autoComplete="email"
                       autoFocus
+                      value={state.email}
+                      onChange={(e) => setState({ ...state, email: e.target.value })}
                     />
                   </Grid>
                   <Grid item sm>
@@ -149,35 +174,29 @@ export default function CreateUser() {
                       name="phone-number"
                       id="phone-number"
                       autoComplete="phone-number"
+                      autoFocus
+                      value={state.phone}
+                      onChange={(e) => setState({ ...state, phone: e.target.value })}
                     />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid item sm>
-                    <KeyboardDatePicker
-                      disableToolbar
-                      variant="inline"
-                      format="dd/MM/yyyy"
-                      margin="normal"
-                      id="date-picker-inline"
-                      label="Date Of Birth"
-                      value={null}
-                      onChange={handleDateChange}
-                    // KeyboardButtonProps={{
-                    //   'aria-label': 'change date',
-                    // }}
-                    />
-                  </Grid>
-                  <Grid item sm>
-                    <TextField
-                      margin="normal"
-                      required
-                      fullWidth
-                      label="Phone Number"
-                      name="phone-number"
-                      id="phone-number"
-                      autoComplete="phone-number"
-                    />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="dd/MM/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="Date Of Birth"
+                        value={state.dateOfBirth}
+                        onChange={(date) => setState({ ...state, dateOfBirth: date })}
+                      // KeyboardButtonProps={{
+                      //   'aria-label': 'change date',
+                      // }}
+                      />
+                    </MuiPickersUtilsProvider>
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
@@ -188,7 +207,8 @@ export default function CreateUser() {
                       label="Identification Type"
                       id="identification-type"
                       name="identification-type"
-                      value={IdentificationTypeEnum.NEW_IC}
+                      value={state.identificationType}
+                      onChange={(e) => setState({ ...state, identificationType: e.target.value as IdentificationTypeEnum })}
                     >
                       {IdSelectComponent()}
                     </Select>
@@ -202,6 +222,9 @@ export default function CreateUser() {
                       name="identification"
                       id="identification"
                       autoComplete="identification"
+                      autoFocus
+                      value={state.identification}
+                      onChange={(e) => setState({ ...state, identification: e.target.value })}
                     />
                   </Grid>
                 </Grid>
@@ -213,7 +236,8 @@ export default function CreateUser() {
                       label="Role"
                       id="role"
                       name="role"
-                      value={UserRoleEnums.TEACHER}
+                      value={state.role}
+                      onChange={(e) => setState({ ...state, role: e.target.value as UserRoleEnums.ADMIN | UserRoleEnums.TEACHER })}
                     >
                       {RoleSelectComponent()}
                     </Select>
@@ -227,12 +251,28 @@ export default function CreateUser() {
                       name="position"
                       id="position"
                       autoComplete="position"
+                      autoFocus
+                      autoCapitalize='on'
+                      value={state.position}
+                      onChange={(e) => setState({ ...state, position: e.target.value })}
                     />
                   </Grid>
+                </Grid>
+                <Grid item sm>
+                  <TextareaAutosize
+                    aria-label="Additional Info"
+                    rowsMin={5}
+                    name="additional-info"
+                    id="additional-info"
+                    placeholder="Additional Info"
+                    value={state.additionalInfo}
+                    onChange={(e) => setState({ ...state, additionalInfo: e.target.value })}
+                  />
                 </Grid>
                 <Button
                   variant="contained"
                   color="primary"
+                  type="submit"
                   className={classes.submit}
                 >
                   Create

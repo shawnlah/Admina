@@ -7,7 +7,6 @@ export interface TeacherModelInterface extends Document {
   _id: string;
   staff: StaffModelInterface;
   classes: ClassModelInterface[];
-  additionalInfo: string;
   inventoriesBorrowed: InventoryModelInterface[];
   createdAt: Date;
   updatedAt: Date;

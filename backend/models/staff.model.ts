@@ -18,6 +18,9 @@ const StaffSchema = new Schema(
       type: String,
       required: true
     },
+    additionalInfo: {
+      type: String
+    },
     semesterSchedule: [
       {
         type: Schema.Types.ObjectId,
