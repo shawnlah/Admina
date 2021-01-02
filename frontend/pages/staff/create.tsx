@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import { Avatar, Button, CssBaseline, TextField, TextareaAutosize, Paper, Grid, Typography, makeStyles, Select, MenuItem } from '@material-ui/core'
+import { Avatar, Button, CssBaseline, TextField, Paper, Grid, Typography, makeStyles, Select, MenuItem } from '@material-ui/core'
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns'
@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  additionalInfo: {
+    marginTop: "3%"
+  }
 }));
 
 interface CreateStaffForm {
@@ -185,6 +188,7 @@ export default function CreateUser() {
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <KeyboardDatePicker
                         disableToolbar
+                        required
                         variant="inline"
                         format="dd/MM/yyyy"
                         margin="normal"
@@ -258,13 +262,16 @@ export default function CreateUser() {
                     />
                   </Grid>
                 </Grid>
-                <Grid item sm>
-                  <TextareaAutosize
+                <Grid className={classes.additionalInfo}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    multiline
                     aria-label="Additional Info"
-                    rowsMin={5}
+                    rows={5}
                     name="additional-info"
                     id="additional-info"
-                    placeholder="Additional Info"
+                    label="Additional Info..."
                     value={state.additionalInfo}
                     onChange={(e) => setState({ ...state, additionalInfo: e.target.value })}
                   />
