@@ -1,8 +1,10 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv'
-import { connect } from 'mongoose';
+import { connect, disconnect } from 'mongoose';
 import authRoutes from './routes/authentication'
+import userRoutes from './routes/user'
 import logger from './logger';
+
 
 // Set up env
 dotenv.config()
@@ -14,18 +16,18 @@ const app: Application = express();
 
 // Routes
 app.use('/auth', authRoutes)
+app.use('/user', userRoutes)
 
 // Start server
 app.listen(port, () => logger.debug(`Server is listening on port ${port}!`));
 
 // Connect to db
 if (mongoURI) {
+  logger.info(`Connecting to ${mongoURI}`)
   connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-    .then(resp => logger.debug("Successfully connected to mongo db"))
-    .catch(err => logger.debug(`Failed to connect to mongo db with uri ${mongoURI} and error: ${err}`))
-} else {
-  logger.debug("Mongo URI EMPTY")
+    .then(res => logger.info('Connected to ekolah db'))
+    .catch(err => logger.debug(`Failed to connect to eskolah db: ${err}`))
 }

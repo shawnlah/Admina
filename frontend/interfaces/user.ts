@@ -27,3 +27,16 @@ export const UserRoles = new Map<string, string>([
   [UserRoleEnums.STUDENT, "Student"],
   [UserRoleEnums.PARENT, "Parent"],
 ])
+
+export interface CreateStaffForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: Date;
+  identificationType: IdentificationTypeEnum;
+  identification: string;
+  role: UserRoleEnums.ADMIN | UserRoleEnums.TEACHER;
+  position: string;
+  additionalInfo: string;
+}

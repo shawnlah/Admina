@@ -24,6 +24,10 @@ const UserSchema: Schema = new Schema(
       type: String,
       unique: true
     },
+    password_hash: {
+      type: String,
+      required: true
+    },
     phone: {
       type: String,
       unique: true

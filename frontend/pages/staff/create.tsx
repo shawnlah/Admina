@@ -5,7 +5,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import DateFnsUtils from '@date-io/date-fns'
 import logger from 'loglevel'
 import NavBar from '../../components/navbar'
-import { IdentificationTypeEnum, IdentificationTypes, UserRoleEnums, UserRoles } from "../../interfaces/user";
+import { CreateStaffForm, IdentificationTypeEnum, IdentificationTypes, UserRoleEnums, UserRoles } from "../../interfaces/user";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,19 +50,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-interface CreateStaffForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  dateOfBirth: Date;
-  identificationType: IdentificationTypeEnum;
-  identification: string;
-  role: UserRoleEnums.ADMIN | UserRoleEnums.TEACHER;
-  position: string;
-  additionalInfo: string;
-}
-
 export default function CreateUser() {
   const classes = useStyles();
 
@@ -98,6 +85,7 @@ export default function CreateUser() {
   const handleSubmit = (e: FormEvent) => {
     logger.info("Form submission triggered", state)
     e.preventDefault()
+    await createUser
   }
 
   const CreateUserForm = () => {

@@ -6,7 +6,9 @@ export interface UserModelInterface extends Document {
   lastName: string;
   email: string;
   phone: string;
-  dateOfBirth: string;
+  dateOfBirth: Date;
+  identification: string;
+  identificationType: IdentificationTypeEnum;
   role: {
     type: string;
     enum: UserRoleEnums
