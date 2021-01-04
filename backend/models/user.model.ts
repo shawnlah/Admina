@@ -40,7 +40,13 @@ const UserSchema: Schema = new Schema(
       type: String,
       enum: Object.values(UserRoleEnums),
       required: true
-    }
+    },
+    hashedRefreshTokens: [
+      {
+        type: String,
+        required: true
+      }
+    ],
   },
   {
     timestamps: true

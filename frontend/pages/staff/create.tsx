@@ -85,7 +85,6 @@ export default function CreateUser() {
   const handleSubmit = (e: FormEvent) => {
     logger.info("Form submission triggered", state)
     e.preventDefault()
-    await createUser
   }
 
   const CreateUserForm = () => {
