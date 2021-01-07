@@ -47,11 +47,13 @@ services:
   postgres:
     image: postgres
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${PG_DB}
       POSTGRES_USER: ${PG_USERNAME}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
+    networks:
+      - admina-network
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     environment:
@@ -67,6 +69,8 @@ services:
       - 8080:8080
     depends_on:
       - postgres
+    networks:
+      - admina-network
 
 networks:
   admina-network:
