@@ -12,7 +12,7 @@ services:
       - "5000:5000"
     env_file: ./backend/.env
     networks:
-      - eskolah-network
+      - admina-network
     command: ["yarn", "dev"]
     environment:
       - MONGO_URI=${MONGO_URI}
@@ -26,7 +26,7 @@ services:
     ports:
       - "27017:27017"
     networks:
-      - eskolah-network
+      - admina-network
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
@@ -42,11 +42,34 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - eskolah-network
+      - admina-network
     command: ["yarn", "dev"]
+  postgres:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: ${PG_DB}
+      DB_USER: ${PG_USERNAME}
+      DB_SCHEMA: ${PG_SCHEMA}
+      DB_PASSWORD: ${PG_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
 
 networks:
-  eskolah-network:
+  admina-network:
     driver: bridge
 
 volumes:

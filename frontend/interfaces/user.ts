@@ -11,21 +11,13 @@ export const IdentificationTypes = new Map<string, string>([
 ])
 
 export enum UserRoleEnums {
-  SUPER_ADMIN = "SUPER_ADMIN",
   ADMIN = "ADMIN",
-  PRINCIPAL = "PRINCIPAL",
-  TEACHER = "TEACHER",
-  STUDENT = "STUDENT",
-  PARENT = "PARENT"
+  EMPLOYEE = "EMPLOYEE"
 }
 
 export const UserRoles = new Map<string, string>([
-  [UserRoleEnums.SUPER_ADMIN, "Super Admin"],
   [UserRoleEnums.ADMIN, "Admin"],
-  [UserRoleEnums.PRINCIPAL, "Principal"],
-  [UserRoleEnums.TEACHER, "Teacher"],
-  [UserRoleEnums.STUDENT, "Student"],
-  [UserRoleEnums.PARENT, "Parent"],
+  [UserRoleEnums.EMPLOYEE, "Employee"],
 ])
 
 export interface CreateStaffForm {
@@ -36,7 +28,7 @@ export interface CreateStaffForm {
   dateOfBirth: Date;
   identificationType: IdentificationTypeEnum;
   identification: string;
-  role: UserRoleEnums.ADMIN | UserRoleEnums.TEACHER;
+  role: UserRoleEnums;
   position: string;
   additionalInfo: string;
 }

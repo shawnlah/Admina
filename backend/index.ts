@@ -1,6 +1,6 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv'
-import { connect, disconnect } from 'mongoose';
+import { connect } from 'mongoose';
 import authRoutes from './routes/authentication'
 import userRoutes from './routes/user'
 import logger from './logger';
@@ -28,6 +28,6 @@ if (mongoURI) {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-    .then(res => logger.info('Connected to ekolah db'))
-    .catch(err => logger.debug(`Failed to connect to eskolah db: ${err}`))
+    .then(res => logger.info('Connected to admina db'))
+    .catch(err => logger.debug(`Failed to connect to admina db: ${err}`))
 }
