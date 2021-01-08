@@ -44,33 +44,6 @@ services:
     networks:
       - admina-network
     command: ["yarn", "dev"]
-  postgres:
-    image: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: ${PG_DB}
-      POSTGRES_USER: ${PG_USERNAME}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-    networks:
-      - admina-network
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: ${PG_DB}
-      DB_USER: ${PG_USERNAME}
-      DB_SCHEMA: ${PG_SCHEMA}
-      DB_PASSWORD: ${PG_PASSWORD}
-      KEYCLOAK_USER: ${KEYCLOAK_USER}
-      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
-    ports:
-      - 8080:8080
-    depends_on:
-      - postgres
-    networks:
-      - admina-network
 
 networks:
   admina-network:
@@ -78,4 +51,3 @@ networks:
 
 volumes:
   data:
-  postgres_data:

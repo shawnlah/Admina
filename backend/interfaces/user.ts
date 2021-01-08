@@ -13,7 +13,6 @@ export interface UserModelInterface extends Document {
     type: string;
     enum: UserRoleEnums
   };
-  hashedRefreshTokens: string[];
   updatedAt: string;
   createdAt: string;
 }
