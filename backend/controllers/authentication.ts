@@ -11,4 +11,9 @@ export default class AuthenticationController extends BaseController {
     logger.info('Logout triggered')
     res.status(200).json({ message: 'Logout' })
   }
+
+  testing(req, res, next) {
+    logger.info('testing triggered')
+    res.status(200).json({ message: 'testing success' })
+  }
 }
