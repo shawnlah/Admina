@@ -26,6 +26,10 @@ export abstract class BaseController {
     return res.sendStatus(201);
   }
 
+  public internalServerError(res: express.Response, message?: string) {
+    return BaseController.jsonResponse(res, 500, message ? message : 'Internal server error');
+  }
+
   public clientError(res: express.Response, message?: string) {
     return BaseController.jsonResponse(res, 400, message ? message : 'Unauthorized');
   }
@@ -52,10 +56,6 @@ export abstract class BaseController {
 
   public tooMany(res: express.Response, message?: string) {
     return BaseController.jsonResponse(res, 429, message ? message : 'Too many requests');
-  }
-
-  public todo(res: express.Response) {
-    return BaseController.jsonResponse(res, 400, 'TODO');
   }
 
   public fail(res: express.Response, error: Error | string) {

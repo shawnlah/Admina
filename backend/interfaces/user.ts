@@ -5,6 +5,7 @@ export interface UserModelInterface extends Document {
   firstName: string;
   lastName: string;
   email: string;
+  auth0UserId: string;
   phone: string;
   dateOfBirth: Date;
   identification: string;
@@ -30,4 +31,19 @@ export enum IdentificationTypeEnum {
   NEW_IC = "NEW_IC",
   OLD_IC = "OLD_IC",
   PASSPORT = "PASSPORT"
+}
+
+export interface CreateUserRequest {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  phone?: string;
+  dateOfBirth?: Date;
+  identificationType?: IdentificationTypeEnum;
+  identification?: string;
+  role?: UserRoleEnums;
+  position?: string;
+  additionalInfo?: string;
+  auth0UserId?: string;
 }

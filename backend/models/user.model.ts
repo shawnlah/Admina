@@ -24,9 +24,10 @@ const UserSchema: Schema = new Schema(
       type: String,
       unique: true
     },
-    password_hash: {
+    auth0UserId: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
     phone: {
       type: String,

@@ -23,7 +23,7 @@ interface Auth0ContextProps {
   handleRedirectCallback: (any) => any
   getIdTokenClaims: (any) => any
   loginWithRedirect: (any) => any
-  getTokenSilently: (any) => any
+  getTokenSilently: () => any
   getTokenWithPopup: (any) => any
   logout: () => any
 }

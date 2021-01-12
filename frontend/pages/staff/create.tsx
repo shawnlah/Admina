@@ -6,6 +6,8 @@ import DateFnsUtils from '@date-io/date-fns'
 import logger from 'loglevel'
 import NavBar from '../../components/navbar'
 import { CreateStaffForm, IdentificationTypeEnum, IdentificationTypes, UserRoleEnums, UserRoles } from "../../interfaces/user";
+import { createUser } from "../../services/user";
+import LoadingButton from "../../components/common/LoadingButton";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +42,13 @@ const useStyles = makeStyles((theme) => ({
   },
   idTypeSelect: {
     padding: "8px",
-    paddingTop: "4.1%"
+    paddingTop: "4.6%"
+  },
+  cancelButton: {
+    marginLeft: '1%'
+  },
+  submitButtonGroup: {
+    marginTop: "4%"
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -61,10 +69,11 @@ export default function CreateUser() {
     dateOfBirth: null,
     identificationType: IdentificationTypeEnum.NEW_IC,
     identification: '',
-    role: UserRoleEnums.TEACHER,
+    role: UserRoleEnums.EMPLOYEE,
     position: '',
     additionalInfo: ''
   } as CreateStaffForm)
+  const [submitLoading, setSubmitLoading] = useState(false)
 
   const IdSelectComponent = () => {
     const idTypesComponent = []
@@ -76,15 +85,23 @@ export default function CreateUser() {
 
   const RoleSelectComponent = () => {
     const rolesComponent = []
-    for (const role of [UserRoleEnums.ADMIN, UserRoleEnums.TEACHER]) {
+    for (const role of Object.values(UserRoleEnums)) {
       rolesComponent.push(<MenuItem key={role} value={role}>{UserRoles.get(role)}</MenuItem>)
     }
     return rolesComponent
   }
 
-  const handleSubmit = (e: FormEvent) => {
-    logger.info("Form submission triggered", state)
+  const handleSubmit = async (e: FormEvent) => {
+    logger.info("[CREATE_USER] Form submission triggered", state)
     e.preventDefault()
+    setSubmitLoading(true)
+    try {
+      await createUser(state)
+    } catch (error) {
+      logger.error('[CREATE_USER] Failed to create new staff', error)
+    } finally {
+      setSubmitLoading(false)
+    }
   }
 
   const CreateUserForm = () => {
@@ -228,7 +245,7 @@ export default function CreateUser() {
                       id="role"
                       name="role"
                       value={state.role}
-                      onChange={(e) => setState({ ...state, role: e.target.value as UserRoleEnums.ADMIN | UserRoleEnums.TEACHER })}
+                      onChange={(e) => setState({ ...state, role: e.target.value as UserRoleEnums })}
                     >
                       {RoleSelectComponent()}
                     </Select>
@@ -263,14 +280,23 @@ export default function CreateUser() {
                     onChange={(e) => setState({ ...state, additionalInfo: e.target.value })}
                   />
                 </Grid>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  className={classes.submit}
-                >
-                  Create
-                </Button>
+                <Grid className={classes.submitButtonGroup}>
+                  <LoadingButton
+                    text="Create Employee"
+                    color="primary"
+                    loading={submitLoading}
+                    disabled={submitLoading}
+                    onClick={handleSubmit}
+                  >
+                  </LoadingButton>
+                  <LoadingButton
+                    buttonStyle={classes.cancelButton}
+                    text="Cancel"
+                    color="white"
+                    onClick={() => { console.log('cancel') }}
+                  >
+                  </LoadingButton>
+                </Grid>
               </form>
             </Grid>
           </Grid>

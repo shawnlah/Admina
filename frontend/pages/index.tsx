@@ -3,6 +3,7 @@ import { useAuth0 } from "../auth/auth0-spa";
 
 export default function HomePage() {
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0()
+  console.log(user)
   return (
     <div>
       <h1>Initial Page</h1>

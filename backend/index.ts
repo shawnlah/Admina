@@ -1,6 +1,8 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv'
+import cors from 'cors'
 import { connect } from 'mongoose';
+import bodyParser from 'body-parser'
 import authRoutes from './routes/authentication'
 import userRoutes from './routes/user'
 import logger from './logger';
@@ -13,6 +15,13 @@ const mongoURI = process.env.MONGO_URI
 
 // Boot express
 const app: Application = express();
+
+// Cors, any because https://stackoverflow.com/a/59186658
+app.use(cors() as any)
+
+// Parsing middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
 app.use('/auth', authRoutes)
