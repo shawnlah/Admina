@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { LeaveModelInterface, LeaveTypeEnum } from "../interfaces/leave";
+import { LeaveModelInterface, LeaveStatusEnum, LeaveTypeEnum } from "../interfaces/leave";
 
 const LeaveSchema = new Schema(
   {
@@ -9,11 +9,21 @@ const LeaveSchema = new Schema(
       required: true
     },
     description: String,
-    leaveDate: {
+    leaveStartDate: {
       type: Date,
       required: true
     },
-    medicalCert: String
+    leaveEndDate: {
+      type: Date,
+      required: true
+    },
+    leaveStatus: {
+      type: String,
+      enum: Object.values(LeaveStatusEnum),
+      required: true
+    },
+    additionalInfo: String,
+    medicalCertS3Url: String
   },
   {
     timestamps: true

@@ -5,6 +5,7 @@ import { connect } from 'mongoose';
 import bodyParser from 'body-parser'
 import authRoutes from './routes/authentication'
 import userRoutes from './routes/user'
+import leaveRoutes from './routes/leave'
 import logger from './logger';
 
 
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Routes
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
+app.use('/leave', leaveRoutes)
 
 // Start server
 app.listen(port, () => logger.debug(`Server is listening on port ${port}!`));

@@ -10,21 +10,24 @@ export interface UserModelInterface extends Document {
   dateOfBirth: Date;
   identification: string;
   identificationType: IdentificationTypeEnum;
-  role: {
-    type: string;
-    enum: UserRoleEnums
-  };
+  role: UserRoleEnums;
+  position: string;
+  reportingPerson: string[];
+  employeesUnderUser: string[];
+  currentBasicPay: string;
+  noticePeriod: number;
+  remainingLeaveDays: number;
+  leavesHistory: string[];
+  salaryHistory: string[];
+  activities: string[];
+  additionalInfo: string[];
   updatedAt: string;
   createdAt: string;
 }
 
 export enum UserRoleEnums {
-  SUPER_ADMIN = "SUPER_ADMIN",
   ADMIN = "ADMIN",
-  PRINCIPAL = "PRINCIPAL",
-  TEACHER = "TEACHER",
-  STUDENT = "STUDENT",
-  PARENT = "PARENT"
+  EMPLOYEE = "EMPLOYEE"
 }
 
 export enum IdentificationTypeEnum {
@@ -37,13 +40,15 @@ export interface CreateUserRequest {
   firstName?: string;
   lastName?: string;
   email?: string;
-  password?: string;
   phone?: string;
   dateOfBirth?: Date;
   identificationType?: IdentificationTypeEnum;
   identification?: string;
+  reportingPerson?: string;
   role?: UserRoleEnums;
   position?: string;
+  currentBasicPay?: string;
+  noticePeriod?: number;
+  remainingLeaveDays?: number;
   additionalInfo?: string;
-  auth0UserId?: string;
 }
