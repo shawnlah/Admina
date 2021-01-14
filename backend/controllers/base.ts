@@ -31,7 +31,7 @@ export abstract class BaseController {
   }
 
   public clientError(res: express.Response, message?: string) {
-    return BaseController.jsonResponse(res, 400, message ? message : 'Unauthorized');
+    return BaseController.jsonResponse(res, 400, message ? message : 'Details are incorrect');
   }
 
   public unauthorized(res: express.Response, message?: string) {

@@ -14,7 +14,10 @@ export interface UserModelInterface extends Document {
   position: string;
   reportingPerson: string;
   employeesUnderUser: string[];
-  currentBasicPay: string;
+  basicPay: string;
+  employeeEpfPercentage: string;
+  companyEpfPercentage: string;
+  socsoPercentage: string;
   noticePeriod: number;
   remainingLeaveDays: number;
   leavesHistory: string[];
@@ -50,7 +53,10 @@ export interface CreateUserRequest {
   reportingPerson?: string;
   role?: UserRoleEnums;
   position?: string;
-  currentBasicPay?: string;
+  basicPay: string;
+  employeeEpfPercentage: string;
+  companyEpfPercentage: string;
+  socsoPercentage: string;
   noticePeriod?: number;
   remainingLeaveDays?: number;
   additionalInfo?: string;

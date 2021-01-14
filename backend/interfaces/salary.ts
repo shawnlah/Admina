@@ -22,6 +22,24 @@ export interface SalaryModelInterface extends Document {
   basicPay: string;
   employeeEpfPercentage: string;
   companyEpfPercentage: string;
+  socsoPercentage: string;
+  deductions: ExtraSalaryDetails[];
+  extraIncomes: ExtraSalaryDetails[];
+  netPay: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ExtraSalaryDetails {
+  name: string;
+  description: string;
+  amount: string;
+}
+
+export interface CreateSalaryRequest {
+  employeeId: string;
+  month: MonthEnums;
+  year: number;
+  deductions: ExtraSalaryDetails[];
+  extraIncomes: ExtraSalaryDetails[];
 }

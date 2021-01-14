@@ -58,7 +58,7 @@ const UserSchema: Schema = new Schema(
         ref: 'User'
       }
     ],
-    currentBasicPay: {
+    basicPay: {
       type: String,
       required: true
     },
@@ -98,6 +98,18 @@ const UserSchema: Schema = new Schema(
         ref: 'Leave'
       }
     ],
+    employeeEpfPercentage: {
+      type: String,
+      required: true
+    },
+    companyEpfPercentage: {
+      type: String,
+      required: true
+    },
+    socsoPercentage: {
+      type: String,
+      required: true
+    },
     salaryHistory: [
       {
         type: Schema.Types.ObjectId,

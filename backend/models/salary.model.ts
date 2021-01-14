@@ -16,13 +16,43 @@ const SalarySchema = new Schema(
       type: String,
       required: true
     },
-    employeeEpfPercentage: {
+    employeeEpfAmount: {
       type: String,
       required: true
     },
-    companyEpfPercentage: {
+    companyEpfAmount: {
       type: String,
       required: true
+    },
+    socsoAmount: {
+      type: String,
+      required: true
+    },
+    deductions: [
+      {
+        name: {
+          type: String,
+          required: true
+        },
+        description: {
+          type: String,
+        }
+      }
+    ],
+    extraIncomes: [
+      {
+        name: {
+          type: String,
+          required: true
+        },
+        description: {
+          type: String
+        }
+      }
+    ],
+    netPay: {
+      type: String,
+      reuired: true
     }
   },
   {
