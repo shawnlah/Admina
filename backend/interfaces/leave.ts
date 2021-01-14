@@ -25,13 +25,30 @@ export interface LeaveModelInterface extends Document {
   createdAt: Date;
   updatedAt: Date;
   medicalCertS3Url: string;
+  rejectedReason: string;
 }
 
 export interface CreateLeaveRequest {
-  auth0UserId: string;
+  userId: string;
+  reportingPersonId: string;
   leaveType: LeaveTypeEnum;
   description?: string;
   leaveStartDate: Date;
   leaveEndDate: Date;
   medicalCertS3Url?: string;
+}
+
+export interface CancelLeaveRequest {
+  leaveId: string;
+  reportingPersonId: string;
+}
+
+export interface ApproveLeaveRequest {
+  leaveId: string;
+  reportingPersonId: string;
+}
+
+export interface RejectLeaveRequest {
+  leaveId: string;
+  reportingPersonId: string;
 }

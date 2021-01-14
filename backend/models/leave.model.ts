@@ -23,7 +23,8 @@ const LeaveSchema = new Schema(
       required: true
     },
     additionalInfo: String,
-    medicalCertS3Url: String
+    medicalCertS3Url: String,
+    rejectedReason: String
   },
   {
     timestamps: true

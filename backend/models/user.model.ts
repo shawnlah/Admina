@@ -47,13 +47,15 @@ const UserSchema: Schema = new Schema(
       required: true
     },
     reportingPerson: {
-      type: String,
-      required: true
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
     },
     employeesUnderUser: [
       {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'User'
       }
     ],
     currentBasicPay: {
@@ -71,19 +73,43 @@ const UserSchema: Schema = new Schema(
     leavesHistory: [
       {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'Leave'
+      }
+    ],
+    leavesApprovedByUser: [
+      {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Leave'
+      }
+    ],
+    leavesRejectedByUser: [
+      {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Leave'
+      }
+    ],
+    leavesPendingUserApproval: [
+      {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Leave'
       }
     ],
     salaryHistory: [
       {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'Salary'
       }
     ],
     activities: [
       {
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'Activity'
       }
     ]
   },

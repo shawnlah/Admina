@@ -12,12 +12,15 @@ export interface UserModelInterface extends Document {
   identificationType: IdentificationTypeEnum;
   role: UserRoleEnums;
   position: string;
-  reportingPerson: string[];
+  reportingPerson: string;
   employeesUnderUser: string[];
   currentBasicPay: string;
   noticePeriod: number;
   remainingLeaveDays: number;
   leavesHistory: string[];
+  leavesApprovedByUser: string[];
+  leavesRejectedByUser: string[];
+  leavesPendingUserApproval: string[];
   salaryHistory: string[];
   activities: string[];
   additionalInfo: string[];
