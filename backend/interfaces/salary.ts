@@ -2,7 +2,7 @@ import { Document } from "mongoose";
 
 export enum MonthEnums {
   JANUARY = 'JANUARY',
-  FEBRUARY = 'FABRUARY',
+  FEBRUARY = 'FEBRUARY',
   MARCH = 'MARCH',
   APRIL = 'APRIL',
   MAY = 'MAY',
@@ -38,6 +38,14 @@ export interface ExtraSalaryDetails {
 
 export interface CreateSalaryRequest {
   employeeId: string;
+  month: MonthEnums;
+  year: number;
+  deductions: ExtraSalaryDetails[];
+  extraIncomes: ExtraSalaryDetails[];
+}
+
+export interface UpdateSalaryRequest {
+  salaryId: string;
   month: MonthEnums;
   year: number;
   deductions: ExtraSalaryDetails[];

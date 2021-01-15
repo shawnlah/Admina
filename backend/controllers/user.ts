@@ -155,7 +155,7 @@ export default class AuthenticationController extends BaseController {
         this.addRoleInAuth0Flow(auth0UserId, token, formData.role ? formData.role : UserRoleEnums.EMPLOYEE)
       ])
     } catch (err) {
-      logger.error('[CREATE_USER] Failed to create user or add role to Auth0', err)
+      logger.error(`[CREATE_USER] Failed to create user or add role to Auth0, auth0 id=${auth0UserId}`, err)
       this.deleteUserFromAuth0Flow(auth0UserId, token)
       return this.internalServerError(res)
     }
@@ -163,7 +163,9 @@ export default class AuthenticationController extends BaseController {
   }
 
   async update(req: Request, res: Response, next: NextFunction) {
+    logger.info('[UPDATE_USER] Receive request to update user', req.body)
     const formData: UpdateUserRequest = req.body
+
     // 1) Clean form
     try {
       validateForm(formData, ['additionalInfo'])
@@ -194,6 +196,7 @@ export default class AuthenticationController extends BaseController {
 
     let currentRole: UserRoleEnums | undefined = undefined
     let auth0UserId = ''
+
     // 2) Check if role needs to be updated
     try {
       const result = await UserModel.findById(userId, 'role auth0UserId')
@@ -202,7 +205,7 @@ export default class AuthenticationController extends BaseController {
         auth0UserId = result.auth0UserId
       }
     } catch (roleError) {
-      logger.error('[UPDATE_USER] Failed to get current user role', roleError)
+      logger.error(`[UPDATE_USER] Failed to get current user role, userId=${userId}`, roleError)
       return this.internalServerError(res)
     }
     if (!currentRole || !auth0UserId) {
@@ -223,6 +226,7 @@ export default class AuthenticationController extends BaseController {
       if (UserRoleEnums.ADMIN === currentRole && UserRoleEnums.ADMIN !== role) {
         try {
           await auth0Client({
+            url: `/api/v2/users/${auth0UserId}/roles`,
             method: 'DELETE',
             headers: {
               authorization: `Bearer ${token}`
@@ -232,7 +236,7 @@ export default class AuthenticationController extends BaseController {
             }
           })
         } catch (deleteRoleError) {
-          logger.error('[UPDATE_USER] Failed to remove user role in Auth0', deleteRoleError)
+          logger.error('[UPDATE_USER] Failed to remove user role in Auth0, auth0 id=${auth0UserId}', deleteRoleError)
           return this.internalServerError(res)
         }
       }
@@ -248,7 +252,7 @@ export default class AuthenticationController extends BaseController {
             }
           })
         } catch (deleteRoleError) {
-          logger.error('[UPDATE_USER] Failed to remove user role in Auth0', deleteRoleError)
+          logger.error(`[UPDATE_USER] Failed to remove user role in Auth0, auth0 id=${auth0UserId}`, deleteRoleError)
           return this.internalServerError(res)
         }
       }
@@ -276,7 +280,7 @@ export default class AuthenticationController extends BaseController {
         additionalInfo
       })
     } catch (updateError) {
-      logger.error('[UPDATE_USER] Failed to update user details', updateError)
+      logger.error(`[UPDATE_USER] Failed to update user details with userId=${userId}`, updateError)
       this.internalServerError(res)
     }
     return this.ok(res)

@@ -33,6 +33,7 @@ export default class LeaveController extends BaseController {
 
   // START - Request leave
   async create(req: Request, res: Response, next: NextFunction) {
+    logger.info('[CREATE_LEAVE] Receive request to create leave', req.body)
     const {
       userId,
       description,
@@ -46,7 +47,6 @@ export default class LeaveController extends BaseController {
     // 1) Create leave
     let leave: LeaveModelInterface
     try {
-      logger.info('[CREATE_LEAVE] Creating leave ...')
       leave = await new LeaveModel({
         leaveType,
         description,
@@ -67,7 +67,7 @@ export default class LeaveController extends BaseController {
         UserModel.updateOne({ _id: reportingPersonId }, { $push: { leavesPendingUserApproval: leave._id } })
       ])
     } catch (ex) {
-      logger.error('[CREATE_LEAVE] Failed to save leave to user or reporting person', ex)
+      logger.error(`[CREATE_LEAVE] Failed to save leave to user or reporting person, leaveId=${leave._id}, userId=${userId}`, ex)
       this.deleteLeave(leave._id)
       return this.internalServerError(res)
     }
@@ -78,6 +78,7 @@ export default class LeaveController extends BaseController {
 
   // START - Cancel leave request
   async cancel(req: Request, res: Response, next: NextFunction) {
+    logger.info('[CANCEL_LEAVE] Receive request to cancel leave', req.body)
     const { leaveId, reportingPersonId }: CancelLeaveRequest = req.body
     // 1) Remove leave from reporting person and set leave to cancelled
     try {
@@ -86,7 +87,7 @@ export default class LeaveController extends BaseController {
         this.updateLeaveStatus(leaveId, LeaveStatusEnum.CANCELED)
       ])
     } catch (ex) {
-      logger.error('[CANCEL_LEAVE] Failed to cancel leave or remove from reporting person', ex)
+      logger.error(`[CANCEL_LEAVE] Failed to cancel leave or remove from reporting person, leaveId=${leaveId}`, ex)
       return this.internalServerError(res)
     }
     return this.ok(res)
@@ -95,6 +96,7 @@ export default class LeaveController extends BaseController {
 
   // START - Approve leave request
   async approve(req: Request, res: Response, next: NextFunction) {
+    logger.info('[APPROVE_LEAVE] Receive request to approve leave', req.body)
     const { reportingPersonId, leaveId }: ApproveLeaveRequest = req.body
     // 1) Set leave to approved and remove leave from reporting person
     try {
@@ -103,7 +105,7 @@ export default class LeaveController extends BaseController {
         this.updateLeaveStatus(leaveId, LeaveStatusEnum.APPROVED)
       ])
     } catch (error) {
-      logger.error('[APPROVE_LEAVE] Failed to approve leave or remove from reporting person', error)
+      logger.error(`[APPROVE_LEAVE] Failed to approve leave or remove from reporting person, leaveId=${leaveId}`, error)
     }
     return this.ok(res)
   }
@@ -111,6 +113,7 @@ export default class LeaveController extends BaseController {
 
   // START - Reject leave request
   async reject(req: Request, res: Response, next: NextFunction) {
+    logger.info('[REJECT_LEAVE] Receive request to reject leave', req.body)
     const { reportingPersonId, leaveId }: RejectLeaveRequest = req.body
     // 1) Set leave to rejected and remove leave from reporting person
     try {
@@ -119,7 +122,7 @@ export default class LeaveController extends BaseController {
         this.updateLeaveStatus(leaveId, LeaveStatusEnum.REJECTED)
       ])
     } catch (error) {
-      logger.error('[REJECT_LEAVE] Failed to reject leave or remove from reporting person', error)
+      logger.error(`[REJECT_LEAVE] Failed to reject leave or remove from reporting person, leaveId=${leaveId}`, error)
     }
     return this.ok(res)
   }

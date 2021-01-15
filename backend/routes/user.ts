@@ -5,7 +5,10 @@ import UserControllers from '../controllers/user'
 const router = Router()
 const user = new UserControllers()
 
-// Login
+// Create user
 router.route('/create').post((req, res, next) => user.create(req, res, next))
+
+// Update user
+router.route('/update').post((req, res, next) => user.update(req, res, next))
 
 export default router 

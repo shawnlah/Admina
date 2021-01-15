@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { CreateSalaryRequest, ExtraSalaryDetails, SalaryModelInterface } from "../interfaces/salary";
+import { ErrorMessages } from "../interfaces/error";
+import { CreateSalaryRequest, ExtraSalaryDetails, MonthEnums, SalaryModelInterface, UpdateSalaryRequest } from "../interfaces/salary";
 import { UserModelInterface } from "../interfaces/user";
 import logger from "../logger";
 import SalaryModel from "../models/salary.model";
@@ -14,6 +15,7 @@ export default class SalaryController extends BaseController {
   // END - Private methods
 
   async create(req: Request, res: Response, next: NextFunction) {
+    logger.info('[CREATE_SALARY] Receive request to create salary', req.body)
     const { employeeId, month, year, deductions, extraIncomes }: CreateSalaryRequest = req.body
     if (year.toString().length !== 4) return this.clientError(res, "Year must be 4 in length. E.g. 1998")
     let employee: UserModelInterface
@@ -62,7 +64,30 @@ export default class SalaryController extends BaseController {
       await employee.save()
       logger.info('[CREATE_SALARY] Updated employee salary history')
     } catch (error) {
-      logger.error('[CREATE_SALARY] Failed to save salary to employee', error)
+      logger.error(`[CREATE_SALARY] Failed to save salary to employee, salaryId=${salaryObj._id}`, error)
+      return this.internalServerError(res)
+    }
+    return this.ok(res)
+  }
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    logger.info('[UPDATE_SALARY] Receive request to update salary', req.body)
+    const { salaryId, month, year, deductions, extraIncomes }: UpdateSalaryRequest = req.body
+
+    // 1) Check if request is trying to update salary not withing the current year or month
+    if ((Object.values(MonthEnums).indexOf(month) !== new Date().getMonth()) || (+year !== new Date().getFullYear())) {
+      logger.warn("[UPDATE_SALARY] Trying to edit salary that's not within current month or year, throwing error ...")
+      return this.clientError(res, ErrorMessages.SALARY_ERROR)
+    }
+
+    // 2) Update salary
+    try {
+      await SalaryModel.updateOne({ _id: salaryId }, {
+        deductions,
+        extraIncomes
+      })
+    } catch (error) {
+      logger.error(`[UPDATE_SALARY] Failed to update salary with salaryId=${salaryId}`, error)
       return this.internalServerError(res)
     }
     return this.ok(res)

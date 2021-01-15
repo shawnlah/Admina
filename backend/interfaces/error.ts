@@ -1,3 +1,4 @@
 export enum ErrorMessages {
   FORM_INCOMPLETE = 'FORM_INCOMPLETE',
+  SALARY_ERROR = 'SALARY_ERROR'
 }
