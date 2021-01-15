@@ -6,6 +6,7 @@ import bodyParser from 'body-parser'
 import authRoutes from './routes/authentication'
 import userRoutes from './routes/user'
 import leaveRoutes from './routes/leave'
+import salaryRoutes from './routes/salary'
 import logger from './logger';
 
 
@@ -28,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
 app.use('/leave', leaveRoutes)
+app.use('/salary', salaryRoutes)
 
 // Start server
 app.listen(port, () => logger.debug(`Server is listening on port ${port}!`));
