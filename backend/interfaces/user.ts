@@ -26,7 +26,7 @@ export interface UserModelInterface extends Document {
   leavesPendingUserApproval: string[];
   salaryHistory: string[];
   activities: string[];
-  additionalInfo: string[];
+  additionalInfo: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -60,4 +60,8 @@ export interface CreateUserRequest {
   noticePeriod?: number;
   remainingLeaveDays?: number;
   additionalInfo?: string;
+}
+
+export interface UpdateUserRequest extends CreateUserRequest {
+  userId: string;
 }

@@ -123,7 +123,8 @@ const UserSchema: Schema = new Schema(
         required: true,
         ref: 'Activity'
       }
-    ]
+    ],
+    additionalInfo: String
   },
   {
     timestamps: true

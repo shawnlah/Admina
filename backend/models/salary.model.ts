@@ -53,7 +53,8 @@ const SalarySchema = new Schema(
     netPay: {
       type: String,
       reuired: true
-    }
+    },
+    salaryS3Url: String,
   },
   {
     timestamps: true

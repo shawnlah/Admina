@@ -1,7 +1,7 @@
 import axios from "axios";
 import { NextFunction, Request, Response } from "express";
 import { ErrorMessages } from "../interfaces/error";
-import { CreateUserRequest, UserRoleEnums } from "../interfaces/user";
+import { CreateUserRequest, UpdateUserRequest, UserRoleEnums } from "../interfaces/user";
 import logger from "../logger";
 import UserModel from "../models/user.model";
 import auth0Client, { getAuth0Token } from "../services/auth0";
@@ -35,24 +35,23 @@ export default class AuthenticationController extends BaseController {
       logger.error('[CREATE_USER] Role envs are missing')
       throw 'Role envs are missing'
     }
-    if (role === UserRoleEnums.ADMIN) {
+    if (UserRoleEnums.ADMIN === role) {
       roles = [process.env.AUTH0_ADMIN_ROLE_ID, process.env.AUTH0_EMPLOYEE_ROLE_ID]
     } else {
       roles = [process.env.AUTH0_EMPLOYEE_ROLE_ID]
     }
     logger.info('[CREATE_USER] Adding role to Auth0 ...')
-    return (await axios({
-      method: 'POST',
-      url: `/api/v2/users/${auth0UserId}/roles`,
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${token}`,
-        'cache-control': 'no-cache'
-      },
-      data: {
-        roles
+    return (await auth0Client.post(
+      `/api/v2/users/${auth0UserId}/roles`,
+      { roles },
+      {
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${token}`,
+          'cache-control': 'no-cache'
+        }
       }
-    }))
+    ))
   }
 
   private async createUser(data: CreateUserRequest, auth0UserId: string) {
@@ -159,6 +158,126 @@ export default class AuthenticationController extends BaseController {
       logger.error('[CREATE_USER] Failed to create user or add role to Auth0', err)
       this.deleteUserFromAuth0Flow(auth0UserId, token)
       return this.internalServerError(res)
+    }
+    return this.ok(res)
+  }
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    const formData: UpdateUserRequest = req.body
+    // 1) Clean form
+    try {
+      validateForm(formData, ['additionalInfo'])
+    } catch (error) {
+      logger.error('[UPDATE_USER] Form is incomplete, throwing error ...')
+      return this.clientError(res, ErrorMessages.FORM_INCOMPLETE)
+    }
+    const {
+      userId,
+      firstName,
+      lastName,
+      email,
+      phone,
+      dateOfBirth,
+      identification,
+      identificationType,
+      role,
+      reportingPerson,
+      remainingLeaveDays,
+      employeeEpfPercentage,
+      companyEpfPercentage,
+      socsoPercentage,
+      basicPay,
+      position,
+      noticePeriod,
+      additionalInfo
+    } = formData
+
+    let currentRole: UserRoleEnums | undefined = undefined
+    let auth0UserId = ''
+    // 2) Check if role needs to be updated
+    try {
+      const result = await UserModel.findById(userId, 'role auth0UserId')
+      if (result) {
+        currentRole = result.role
+        auth0UserId = result.auth0UserId
+      }
+    } catch (roleError) {
+      logger.error('[UPDATE_USER] Failed to get current user role', roleError)
+      return this.internalServerError(res)
+    }
+    if (!currentRole || !auth0UserId) {
+      logger.error('[UPDATE_USER] Current role or Auth id is missing for user')
+      return this.internalServerError(res)
+    }
+    // Need to update roles
+    if (currentRole !== role) {
+      // Get Auth0 access token
+      let token = ''
+      try {
+        token = await getAuth0Token()
+      } catch (e) {
+        logger.error('[CREATE_USER] Failed to get auth token')
+        return this.internalServerError(res)
+      }
+      // this means user has been downgraded
+      if (UserRoleEnums.ADMIN === currentRole && UserRoleEnums.ADMIN !== role) {
+        try {
+          await auth0Client({
+            method: 'DELETE',
+            headers: {
+              authorization: `Bearer ${token}`
+            },
+            data: {
+              roles: [process.env.AUTH0_ADMIN_ROLE_ID]
+            }
+          })
+        } catch (deleteRoleError) {
+          logger.error('[UPDATE_USER] Failed to remove user role in Auth0', deleteRoleError)
+          return this.internalServerError(res)
+        }
+      }
+      // this means user has been promoted
+      if (UserRoleEnums.EMPLOYEE === currentRole && UserRoleEnums.ADMIN === role) {
+        try {
+          await auth0Client.post(`/api/v2/users/${auth0UserId}/roles`, {
+            headers: {
+              authorization: `Bearer ${token}`
+            },
+            data: {
+              roles: [process.env.AUTH0_ADMIN_ROLE_ID]
+            }
+          })
+        } catch (deleteRoleError) {
+          logger.error('[UPDATE_USER] Failed to remove user role in Auth0', deleteRoleError)
+          return this.internalServerError(res)
+        }
+      }
+    }
+
+    // 3) Update user details in db
+    try {
+      await UserModel.updateOne({ _id: userId }, {
+        firstName,
+        lastName,
+        email,
+        phone,
+        dateOfBirth,
+        identification,
+        identificationType,
+        role,
+        reportingPerson,
+        remainingLeaveDays,
+        employeeEpfPercentage,
+        companyEpfPercentage,
+        socsoPercentage,
+        basicPay,
+        position,
+        noticePeriod,
+        additionalInfo
+      })
+    } catch (updateError) {
+      logger.error('[UPDATE_USER] Failed to update user details', updateError)
+      this.internalServerError(res)
     }
     return this.ok(res)
   }
