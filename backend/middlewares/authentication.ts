@@ -14,7 +14,7 @@ export const checkJwt = jwt({
   }),
 
   // Validate the audience and the issuer.
-  audience: 'http://localhost:5000/auth/testing',
+  audience: 'http://localhost:5000/auth/',
   issuer: `${process.env.AUTH0_ISSUER}`,
   algorithms: ["RS256"]
 })
@@ -23,6 +23,6 @@ export const checkPermissions = (permission) => {
   return (req, res, next) => {
     const { permissions } = req.user
     if (permissions.includes(permission)) return next()
-    res.status(403).send('meh unauthorized')
+    res.status(403).send('Unauthorized')
   }
 };
